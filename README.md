@@ -1,1 +1,1 @@
-# fiustudenthealthresourcehub
+# FIU Student Health Resource Hub
