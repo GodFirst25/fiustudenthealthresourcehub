@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import "./styles/global.css";
+import { CallConfirmationModal } from "./components/CallConfirmationModal";
+import { ContactInfoPage, ContactNumber } from "./components/ContactInfoPage";
 
 type IconName =
   | "arrow"
@@ -17,7 +19,7 @@ type IconName =
   | "user"
   | "x";
 
-type Page = "home" | "resources" | "detail";
+type Page = "home" | "resources" | "detail" | "contact";
 
 type Resource = {
   id: number;
@@ -30,6 +32,7 @@ type Resource = {
   tint: "lavender" | "mint" | "peach" | "blue";
   services: string[];
   website: string;
+  phone: string;
 };
 
 const resources: Resource[] = [
@@ -43,7 +46,8 @@ const resources: Resource[] = [
     icon: "chat",
     tint: "lavender",
     services: ["Individual counseling", "Crisis support", "Group sessions"],
-    website: "https://counseling.fiu.edu/"
+    website: "https://counseling.fiu.edu/",
+    phone: "305-348-2277"
   },
   {
     id: 2,
@@ -55,7 +59,8 @@ const resources: Resource[] = [
     icon: "heart",
     tint: "mint",
     services: ["General checkups", "Immunizations", "Lab services"],
-    website: "https://dasa.fiu.edu/all-departments/student-health/"
+    website: "https://dasa.fiu.edu/all-departments/student-health/",
+    phone: "305-348-2401"
   },
   {
     id: 3,
@@ -67,7 +72,8 @@ const resources: Resource[] = [
     icon: "shield",
     tint: "peach",
     services: ["Advocacy", "Safety planning", "Crisis response"],
-    website: "https://dasa.fiu.edu/all-departments/victim-empowerment/"
+    website: "https://dasa.fiu.edu/all-departments/victim-empowerment/",
+    phone: "305-348-3050"
   },
   {
     id: 4,
@@ -79,7 +85,8 @@ const resources: Resource[] = [
     icon: "spark",
     tint: "blue",
     services: ["Wellness coaching", "Nutrition planning", "Sleep support"],
-    website: "https://dasa.fiu.edu/all-departments/wellness-recreation/"
+    website: "https://dasa.fiu.edu/all-departments/wellness-recreation/",
+    phone: "305-348-2797"
   }
 ];
 
@@ -216,6 +223,47 @@ function App() {
   const [filter, setFilter] = useState<"All" | Resource["type"]>("All");
   const [guide, setGuide] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [callModal, setCallModal] = useState<{ isOpen: boolean; phone: string; title?: string; isEmergency?: boolean }>({
+    isOpen: false,
+    phone: "",
+    title: undefined,
+    isEmergency: false,
+  });
+
+  const contactNumbers: ContactNumber[] = [
+    {
+      number: "305-348-2277",
+      title: "General Support",
+      description: "Counseling & Psychological Services, Student Health Clinics, and general FIU health questions.",
+      available: "During business hours",
+    },
+    {
+      number: "305-348-2401",
+      title: "Student Health Clinics",
+      description: "Schedule appointments for primary care, immunizations, and lab services.",
+      available: "Monday - Friday",
+    },
+    {
+      number: "305-348-3050",
+      title: "Victim Empowerment Program",
+      description: "Free, confidential support and advocacy for students in crisis.",
+      isEmergency: false,
+      available: "24/7 support available",
+    },
+    {
+      number: "305-348-2797",
+      title: "Healthy Living Program",
+      description: "Wellness coaching, nutrition planning, and stress-management support.",
+      available: "Weekdays",
+    },
+    {
+      number: "988",
+      title: "Crisis Support Line",
+      description: "National Suicide & Crisis Lifeline. Free, confidential support for anyone in distress.",
+      isEmergency: true,
+      available: "24/7 - Call or text",
+    },
+  ];
 
   const filtered = useMemo(
     () =>
@@ -232,13 +280,41 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleCallClick = (phoneNumber: string, isEmergency: boolean = false, title?: string) => {
+    setCallModal({
+      isOpen: true,
+      phone: phoneNumber,
+      title: title,
+      isEmergency: isEmergency,
+    });
+  };
+
+  const handleCallConfirm = () => {
+    window.location.href = `tel:${callModal.phone}`;
+    setCallModal({ isOpen: false, phone: "", title: undefined, isEmergency: false });
+  };
+
+  const handleCallCancel = () => {
+    setCallModal({ isOpen: false, phone: "", title: undefined, isEmergency: false });
+  };
+
   return (
     <div className="app-shell">
       <div className="urgent-bar">
         <span>Need help right now?</span>
-        <button>Call 305-348-2277</button>
+        <button 
+          onClick={() => handleCallClick("305-348-2277", false, "General Support")}
+          style={{ background: 'none', border: 'none', color: 'white', textDecoration: 'underline', cursor: 'pointer' }}
+        >
+          Call 305-348-2277
+        </button>
         <span className="divider">or</span>
-        <button>Get crisis support</button>
+        <button 
+          onClick={() => handleCallClick("988", true, "Crisis Support Line")}
+          style={{ background: 'none', border: 'none', color: 'var(--gold)', textDecoration: 'underline', cursor: 'pointer' }}
+        >
+          Get crisis support
+        </button>
       </div>
 
       <header>
@@ -246,12 +322,11 @@ function App() {
         <nav className={menu ? "open" : ""}>
           <button className={page === "home" ? "active" : ""} onClick={() => { setPage("home"); setMenu(false); }}>Home</button>
           <button className={page === "resources" ? "active" : ""} onClick={() => { setPage("resources"); setMenu(false); }}>Find care</button>
-          <button onClick={() => setGuide(true)}>Not sure where to start?</button>
-          <button>Health essentials</button>
+          <button className={page === "contact" ? "active" : ""} onClick={() => { setPage("contact"); setMenu(false); }}>Contact numbers</button>
+          <button disabled title="Coming in next release" onClick={() => alert('Guided discovery is coming soon! For now, try browsing by category or using search.')}>Not sure where to start? (coming soon)</button>
         </nav>
         <div className="header-actions">
           <button className="icon-button" aria-label="Search" onClick={() => setPage("resources")}><Icon name="search" /></button>
-          <Button kind="secondary">MyFIU <Icon name="user" size={16} /></Button>
         </div>
         <button className="mobile-menu" aria-label="Open menu" onClick={() => setMenu(!menu)}>
           <Icon name={menu ? "x" : "menu"} />
@@ -270,7 +345,15 @@ function App() {
               </p>
               <div className="hero-actions">
                 <Button icon="arrow" onClick={() => setPage("resources")}>Find a resource</Button>
-                <Button kind="secondary" onClick={() => setGuide(true)}>Help me choose</Button>
+                <button 
+                  className="btn btn-secondary"
+                  disabled
+                  title="Coming in next release"
+                  onClick={() => alert('Guided discovery is coming soon! For now, try browsing by category or using search.')}
+                  style={{ opacity: 0.7, cursor: 'not-allowed' }}
+                >
+                  Help me choose (coming soon)
+                </button>
               </div>
               <div className="trust-row">
                 <span><Icon name="shield" size={17} /> Confidential</span>
@@ -390,13 +473,46 @@ function App() {
             <aside className="action-card">
               <span className="status-dot">Accepting appointments</span>
               <h2>Ready to connect?</h2>
-              <Button icon="calendar">Schedule an appointment</Button>
-              <Button kind="secondary" icon="phone">Call resource</Button>
-              <a className="btn btn-text" href={selected.website} target="_blank" rel="noreferrer">Visit official site</a>
+              <button 
+                onClick={() => handleCallClick(selected.phone, false, selected.title)}
+                className="btn btn-primary"
+                aria-label={`Call ${selected.title} at ${selected.phone}`}
+              >
+                📞 Call to schedule
+              </button>
+              <a 
+                href={selected.website}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-secondary"
+              >
+                🌐 Visit website
+              </a>
             </aside>
           </div>
         </main>
       )}
+
+      {page === "contact" && (
+        <ContactInfoPage
+          numbers={contactNumbers}
+          onCall={handleCallClick}
+          onBack={() => setPage("home")}
+        />
+      )}
+
+      <CallConfirmationModal
+        isOpen={callModal.isOpen}
+        phoneNumber={callModal.phone}
+        serviceTitle={callModal.title}
+        isEmergency={callModal.isEmergency}
+        onConfirm={handleCallConfirm}
+        onCancel={handleCallCancel}
+        onViewAllNumbers={() => {
+          handleCallCancel();
+          setPage("contact");
+        }}
+      />
     </div>
   );
 }
