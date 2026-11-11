@@ -30,6 +30,7 @@ type Resource = {
   tint: "lavender" | "mint" | "peach" | "blue";
   services: string[];
   website: string;
+  phone: string;
 };
 
 const resources: Resource[] = [
@@ -43,7 +44,8 @@ const resources: Resource[] = [
     icon: "chat",
     tint: "lavender",
     services: ["Individual counseling", "Crisis support", "Group sessions"],
-    website: "https://counseling.fiu.edu/"
+    website: "https://counseling.fiu.edu/",
+    phone: "305-348-2277"
   },
   {
     id: 2,
@@ -55,7 +57,8 @@ const resources: Resource[] = [
     icon: "heart",
     tint: "mint",
     services: ["General checkups", "Immunizations", "Lab services"],
-    website: "https://dasa.fiu.edu/all-departments/student-health/"
+    website: "https://dasa.fiu.edu/all-departments/student-health/",
+    phone: "305-348-2401"
   },
   {
     id: 3,
@@ -67,7 +70,8 @@ const resources: Resource[] = [
     icon: "shield",
     tint: "peach",
     services: ["Advocacy", "Safety planning", "Crisis response"],
-    website: "https://dasa.fiu.edu/all-departments/victim-empowerment/"
+    website: "https://dasa.fiu.edu/all-departments/victim-empowerment/",
+    phone: "305-348-3050"
   },
   {
     id: 4,
@@ -79,7 +83,8 @@ const resources: Resource[] = [
     icon: "spark",
     tint: "blue",
     services: ["Wellness coaching", "Nutrition planning", "Sleep support"],
-    website: "https://dasa.fiu.edu/all-departments/wellness-recreation/"
+    website: "https://dasa.fiu.edu/all-departments/wellness-recreation/",
+    phone: "305-348-2797"
   }
 ];
 
@@ -236,9 +241,9 @@ function App() {
     <div className="app-shell">
       <div className="urgent-bar">
         <span>Need help right now?</span>
-        <button>Call 305-348-2277</button>
+        <a href="tel:305-348-2277" style={{ color: 'white', textDecoration: 'none', cursor: 'pointer' }}>Call 305-348-2277</a>
         <span className="divider">or</span>
-        <button>Get crisis support</button>
+        <a href="tel:988" style={{ color: 'var(--gold)', textDecoration: 'none', cursor: 'pointer' }}>Get crisis support</a>
       </div>
 
       <header>
@@ -246,12 +251,10 @@ function App() {
         <nav className={menu ? "open" : ""}>
           <button className={page === "home" ? "active" : ""} onClick={() => { setPage("home"); setMenu(false); }}>Home</button>
           <button className={page === "resources" ? "active" : ""} onClick={() => { setPage("resources"); setMenu(false); }}>Find care</button>
-          <button onClick={() => setGuide(true)}>Not sure where to start?</button>
-          <button>Health essentials</button>
+          <button disabled title="Coming in next release" onClick={() => alert('Guided discovery is coming soon! For now, try browsing by category or using search.')}>Not sure where to start? (coming soon)</button>
         </nav>
         <div className="header-actions">
           <button className="icon-button" aria-label="Search" onClick={() => setPage("resources")}><Icon name="search" /></button>
-          <Button kind="secondary">MyFIU <Icon name="user" size={16} /></Button>
         </div>
         <button className="mobile-menu" aria-label="Open menu" onClick={() => setMenu(!menu)}>
           <Icon name={menu ? "x" : "menu"} />
@@ -270,7 +273,15 @@ function App() {
               </p>
               <div className="hero-actions">
                 <Button icon="arrow" onClick={() => setPage("resources")}>Find a resource</Button>
-                <Button kind="secondary" onClick={() => setGuide(true)}>Help me choose</Button>
+                <button 
+                  className="btn btn-secondary"
+                  disabled
+                  title="Coming in next release"
+                  onClick={() => alert('Guided discovery is coming soon! For now, try browsing by category or using search.')}
+                  style={{ opacity: 0.7, cursor: 'not-allowed' }}
+                >
+                  Help me choose (coming soon)
+                </button>
               </div>
               <div className="trust-row">
                 <span><Icon name="shield" size={17} /> Confidential</span>
@@ -390,9 +401,21 @@ function App() {
             <aside className="action-card">
               <span className="status-dot">Accepting appointments</span>
               <h2>Ready to connect?</h2>
-              <Button icon="calendar">Schedule an appointment</Button>
-              <Button kind="secondary" icon="phone">Call resource</Button>
-              <a className="btn btn-text" href={selected.website} target="_blank" rel="noreferrer">Visit official site</a>
+              <a 
+                href={`tel:${selected.phone}`} 
+                className="btn btn-primary"
+                aria-label={`Call ${selected.title} at ${selected.phone}`}
+              >
+                📞 Call to schedule
+              </a>
+              <a 
+                href={selected.website}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-secondary"
+              >
+                🌐 Visit website
+              </a>
             </aside>
           </div>
         </main>
