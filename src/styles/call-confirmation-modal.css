@@ -1,0 +1,240 @@
+.call-confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.call-confirmation-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.call-confirmation-modal.emergency {
+  border-top: 4px solid #dc2626;
+}
+
+.emergency-badge {
+  background-color: #fecaca;
+  color: #991b1b;
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  border-bottom: 1px solid #fca5a5;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.modal-body {
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.service-title {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.phone-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+}
+
+.phone-icon {
+  font-size: 28px;
+}
+
+.phone-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  font-family: "Courier New", monospace;
+  letter-spacing: 1px;
+}
+
+.disclaimer {
+  margin: 16px 0 0 0;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid #e5e7eb;
+  justify-content: flex-end;
+}
+
+.modal-footer-secondary {
+  padding: 12px 20px 0;
+  border-top: 1px solid #f3f4f6;
+  text-align: center;
+}
+
+.btn-view-all {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.btn-view-all:hover {
+  color: #2563eb;
+}
+
+.btn-cancel,
+.btn-confirm {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.btn-cancel {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.btn-cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-cancel:active {
+  background-color: #d1d5db;
+}
+
+.btn-confirm {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-confirm:hover {
+  background-color: #2563eb;
+}
+
+.btn-confirm:active {
+  background-color: #1d4ed8;
+}
+
+.btn-confirm.emergency {
+  background-color: #dc2626;
+}
+
+.btn-confirm.emergency:hover {
+  background-color: #b91c1c;
+}
+
+.btn-confirm.emergency:active {
+  background-color: #991b1b;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .call-confirmation-modal {
+    width: 95%;
+    max-width: none;
+  }
+
+  .modal-body {
+    padding: 20px 16px;
+  }
+
+  .phone-number {
+    font-size: 20px;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel,
+  .btn-confirm {
+    flex: 1;
+    padding: 12px 16px;
+  }
+}
